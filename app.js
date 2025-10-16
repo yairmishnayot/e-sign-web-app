@@ -19,11 +19,11 @@ const state = {
 function getOptimalScale() {
   const screenWidth = window.innerWidth;
   if (screenWidth < 768) {
-    return 1.0; // Mobile - smaller scale
+    return 1.0; // Mobile - smaller scale for better fit
   } else if (screenWidth < 1024) {
-    return 1.2; // Tablet
+    return 1.5; // Tablet
   } else {
-    return 1.5; // Desktop
+    return 2.0; // Desktop - larger for better quality
   }
 }
 
