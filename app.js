@@ -408,14 +408,16 @@ function makeDraggable(element, signature) {
   let isDragging = false;
   let startX, startY;
 
-  element.addEventListener("mousedown", (e) => {
+  // Mouse events
+  const handleMouseDown = (e) => {
     isDragging = true;
     startX = e.clientX - element.offsetLeft;
     startY = e.clientY - element.offsetTop;
     element.style.cursor = "grabbing";
-  });
+    e.preventDefault();
+  };
 
-  document.addEventListener("mousemove", (e) => {
+  const handleMouseMove = (e) => {
     if (!isDragging) return;
 
     const rect = pdfCanvas.getBoundingClientRect();
@@ -431,14 +433,61 @@ function makeDraggable(element, signature) {
 
     element.style.left = `${state.canvasOffset.x + newX}px`;
     element.style.top = `${state.canvasOffset.y + newY}px`;
-  });
+  };
 
-  document.addEventListener("mouseup", () => {
+  const handleMouseUp = () => {
     if (isDragging) {
       isDragging = false;
       element.style.cursor = "move";
     }
-  });
+  };
+
+  // Touch events for mobile
+  const handleTouchStart = (e) => {
+    isDragging = true;
+    const touch = e.touches[0];
+    startX = touch.clientX - element.offsetLeft;
+    startY = touch.clientY - element.offsetTop;
+    e.preventDefault();
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging) return;
+
+    const touch = e.touches[0];
+    const rect = pdfCanvas.getBoundingClientRect();
+    let newX = touch.clientX - startX - state.canvasOffset.x;
+    let newY = touch.clientY - startY - state.canvasOffset.y;
+
+    // Constrain to canvas bounds
+    newX = Math.max(0, Math.min(newX, pdfCanvas.width - signature.width));
+    newY = Math.max(0, Math.min(newY, pdfCanvas.height - signature.height));
+
+    signature.x = newX;
+    signature.y = newY;
+
+    element.style.left = `${state.canvasOffset.x + newX}px`;
+    element.style.top = `${state.canvasOffset.y + newY}px`;
+
+    e.preventDefault();
+  };
+
+  const handleTouchEnd = (e) => {
+    if (isDragging) {
+      isDragging = false;
+    }
+    e.preventDefault();
+  };
+
+  // Add mouse events
+  element.addEventListener("mousedown", handleMouseDown);
+  document.addEventListener("mousemove", handleMouseMove);
+  document.addEventListener("mouseup", handleMouseUp);
+
+  // Add touch events
+  element.addEventListener("touchstart", handleTouchStart, { passive: false });
+  element.addEventListener("touchmove", handleTouchMove, { passive: false });
+  element.addEventListener("touchend", handleTouchEnd, { passive: false });
 }
 
 // Remove signature
