@@ -64,12 +64,53 @@
                     </svg>
                     הורד PDF
                 </button>
+                <button class="btn btn-success" id="emailBtn" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    שלח במייל
+                </button>
                 <button class="btn btn-secondary" id="newDocBtn">מסמך חדש</button>
             </div>
 
             <div class="canvas-container" id="canvasContainer">
+                <div id="clickInstruction" class="click-instruction" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L12 22M12 2L8 6M12 2L16 6"></path>
+                    </svg>
+                    לחץ על המסמך כדי למקם את החתימה
+                </div>
                 <canvas id="pdfCanvas"></canvas>
                 <div id="signatureMarkers"></div>
+            </div>
+        </div>
+
+        <!-- Email Modal -->
+        <div id="emailModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>שלח PDF במייל</h2>
+                    <button class="close-btn" id="closeEmailModalBtn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>הזן את כתובת המייל לשליחת המסמך החתום:</p>
+                    <div class="email-input-group">
+                        <label for="recipientEmail">כתובת מייל:</label>
+                        <input type="email" id="recipientEmail" placeholder="example@email.com" required>
+                    </div>
+                    <div class="email-input-group">
+                        <label for="emailSubject">נושא:</label>
+                        <input type="text" id="emailSubject" value="מסמך חתום" placeholder="נושא ההודעה">
+                    </div>
+                    <div class="email-input-group">
+                        <label for="emailMessage">הודעה (אופציונלי):</label>
+                        <textarea id="emailMessage" rows="3" placeholder="הוסף הודעה אישית..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancelEmailBtn">ביטול</button>
+                    <button class="btn btn-success" id="sendEmailBtn">שלח</button>
+                </div>
             </div>
         </div>
 
@@ -106,6 +147,7 @@
     <!-- Load PDF.js from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

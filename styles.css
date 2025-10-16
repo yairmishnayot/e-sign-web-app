@@ -60,6 +60,8 @@ header p {
 .upload-box.dragover {
     background: #f0f4ff;
     border: 3px dashed #667eea;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 25px 70px rgba(102, 126, 234, 0.4);
 }
 
 .upload-icon {
@@ -175,6 +177,49 @@ header p {
     min-height: 600px;
     overflow: auto;
     direction: ltr;
+}
+
+.click-instruction {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #10b981;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: slideDown 0.3s ease, pulse 2s ease-in-out infinite;
+}
+
+.click-instruction svg {
+    width: 24px;
+    height: 24px;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateX(-50%) translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: translateX(-50%) scale(1);
+    }
+    50% {
+        transform: translateX(-50%) scale(1.05);
+    }
 }
 
 #pdfCanvas {
@@ -360,6 +405,42 @@ header p {
     gap: 15px;
     padding: 25px 30px;
     border-top: 2px solid #e2e8f0;
+}
+
+/* Email Input Styles */
+.email-input-group {
+    margin-bottom: 20px;
+}
+
+.email-input-group label {
+    display: block;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+}
+
+.email-input-group input[type="email"],
+.email-input-group input[type="text"],
+.email-input-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Heebo', sans-serif;
+    transition: border-color 0.2s;
+}
+
+.email-input-group input[type="email"]:focus,
+.email-input-group input[type="text"]:focus,
+.email-input-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.email-input-group textarea {
+    resize: vertical;
+    min-height: 80px;
 }
 
 /* Responsive Design */
