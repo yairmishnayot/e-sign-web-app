@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חתימה אלקטרונית - כלי חתימה על PDF</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>כלי חתימה אלקטרונית</h1>
+            <p>העלה, חתום והורד את מסמכי ה-PDF שלך</p>
+        </header>
+
+        <!-- Upload Section -->
+        <div id="uploadSection" class="upload-section">
+            <div class="upload-box" id="uploadBox">
+                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <h2>העלאת מסמך PDF</h2>
+                <p>גרור ושחרר את קובץ ה-PDF כאן או לחץ לעיון</p>
+                <input type="file" id="pdfInput" accept=".pdf" hidden>
+                <button class="btn btn-primary" id="browseBtn">עיון בקבצים</button>
+            </div>
+        </div>
+
+        <!-- PDF Viewer Section -->
+        <div id="viewerSection" class="viewer-section" style="display: none;">
+            <div class="toolbar">
+                <button class="btn btn-secondary" id="prevPageBtn" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                    הקודם
+                </button>
+                <span class="page-info">
+                    עמוד <span id="currentPage">1</span> מתוך <span id="totalPages">1</span>
+                </span>
+                <button class="btn btn-secondary" id="nextPageBtn" disabled>
+                    הבא
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <div class="toolbar-spacer"></div>
+                <button class="btn btn-success" id="addSignatureBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14"></path>
+                    </svg>
+                    הוסף חתימה
+                </button>
+                <button class="btn btn-primary" id="downloadBtn" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    הורד PDF
+                </button>
+                <button class="btn btn-secondary" id="newDocBtn">מסמך חדש</button>
+            </div>
+
+            <div class="canvas-container" id="canvasContainer">
+                <canvas id="pdfCanvas"></canvas>
+                <div id="signatureMarkers"></div>
+            </div>
+        </div>
+
+        <!-- Signature Modal -->
+        <div id="signatureModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>צור את החתימה שלך</h2>
+                    <button class="close-btn" id="closeModalBtn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>צייר את החתימה שלך למטה:</p>
+                    <canvas id="signatureCanvas"></canvas>
+                    <div class="signature-controls">
+                        <button class="btn btn-secondary" id="clearSignatureBtn">נקה</button>
+                        <div class="color-picker">
+                            <label>צבע:</label>
+                            <input type="color" id="signatureColor" value="#000000">
+                        </div>
+                        <div class="size-picker">
+                            <label>גודל:</label>
+                            <input type="range" id="signatureSize" min="1" max="5" value="2">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancelSignatureBtn">ביטול</button>
+                    <button class="btn btn-primary" id="saveSignatureBtn">שמור חתימה</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load PDF.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
