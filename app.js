@@ -8,12 +8,24 @@ const state = {
   pdfBytes: null,
   currentPage: 1,
   totalPages: 0,
-  scale: 1.5,
+  scale: getOptimalScale(),
   isDrawing: false,
   signatureData: null,
   signatures: [], // Array of {x, y, width, height, data, page}
   canvasOffset: { x: 0, y: 0 },
 };
+
+// Get optimal scale based on screen size
+function getOptimalScale() {
+  const screenWidth = window.innerWidth;
+  if (screenWidth < 768) {
+    return 1.0; // Mobile - smaller scale
+  } else if (screenWidth < 1024) {
+    return 1.2; // Tablet
+  } else {
+    return 1.5; // Desktop
+  }
+}
 
 // DOM elements
 const uploadSection = document.getElementById("uploadSection");
@@ -411,8 +423,9 @@ function makeDraggable(element, signature) {
   // Mouse events
   const handleMouseDown = (e) => {
     isDragging = true;
-    startX = e.clientX - element.offsetLeft;
-    startY = e.clientY - element.offsetTop;
+    const rect = element.getBoundingClientRect();
+    startX = e.clientX - rect.left;
+    startY = e.clientY - rect.top;
     element.style.cursor = "grabbing";
     e.preventDefault();
   };
@@ -420,16 +433,22 @@ function makeDraggable(element, signature) {
   const handleMouseMove = (e) => {
     if (!isDragging) return;
 
-    const rect = pdfCanvas.getBoundingClientRect();
-    let newX = e.clientX - startX - state.canvasOffset.x;
-    let newY = e.clientY - startY - state.canvasOffset.y;
+    const canvasRect = pdfCanvas.getBoundingClientRect();
+
+    // Calculate new position relative to canvas
+    let newX = e.clientX - startX - canvasRect.left;
+    let newY = e.clientY - startY - canvasRect.top;
 
     // Constrain to canvas bounds
-    newX = Math.max(0, Math.min(newX, pdfCanvas.width - signature.width));
-    newY = Math.max(0, Math.min(newY, pdfCanvas.height - signature.height));
+    newX = Math.max(0, Math.min(newX, canvasRect.width - signature.width));
+    newY = Math.max(0, Math.min(newY, canvasRect.height - signature.height));
 
-    signature.x = newX;
-    signature.y = newY;
+    // Calculate scale factor between canvas display size and actual size
+    const scaleX = pdfCanvas.width / canvasRect.width;
+    const scaleY = pdfCanvas.height / canvasRect.height;
+
+    signature.x = newX * scaleX;
+    signature.y = newY * scaleY;
 
     element.style.left = `${state.canvasOffset.x + newX}px`;
     element.style.top = `${state.canvasOffset.y + newY}px`;
@@ -446,30 +465,40 @@ function makeDraggable(element, signature) {
   const handleTouchStart = (e) => {
     isDragging = true;
     const touch = e.touches[0];
-    startX = touch.clientX - element.offsetLeft;
-    startY = touch.clientY - element.offsetTop;
+    const rect = element.getBoundingClientRect();
+    startX = touch.clientX - rect.left;
+    startY = touch.clientY - rect.top;
     e.preventDefault();
+    e.stopPropagation();
   };
 
   const handleTouchMove = (e) => {
     if (!isDragging) return;
 
     const touch = e.touches[0];
-    const rect = pdfCanvas.getBoundingClientRect();
-    let newX = touch.clientX - startX - state.canvasOffset.x;
-    let newY = touch.clientY - startY - state.canvasOffset.y;
+    const canvasRect = pdfCanvas.getBoundingClientRect();
+    const containerRect = canvasContainer.getBoundingClientRect();
+
+    // Calculate new position relative to canvas
+    let newX = touch.clientX - startX - canvasRect.left;
+    let newY = touch.clientY - startY - canvasRect.top;
 
     // Constrain to canvas bounds
-    newX = Math.max(0, Math.min(newX, pdfCanvas.width - signature.width));
-    newY = Math.max(0, Math.min(newY, pdfCanvas.height - signature.height));
+    newX = Math.max(0, Math.min(newX, canvasRect.width - signature.width));
+    newY = Math.max(0, Math.min(newY, canvasRect.height - signature.height));
 
-    signature.x = newX;
-    signature.y = newY;
+    // Calculate scale factor between canvas display size and actual size
+    const scaleX = pdfCanvas.width / canvasRect.width;
+    const scaleY = pdfCanvas.height / canvasRect.height;
+
+    signature.x = newX * scaleX;
+    signature.y = newY * scaleY;
 
     element.style.left = `${state.canvasOffset.x + newX}px`;
     element.style.top = `${state.canvasOffset.y + newY}px`;
 
     e.preventDefault();
+    e.stopPropagation();
   };
 
   const handleTouchEnd = (e) => {

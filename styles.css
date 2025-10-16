@@ -177,6 +177,14 @@ header p {
     min-height: 600px;
     overflow: auto;
     direction: ltr;
+    touch-action: pan-y pinch-zoom;
+}
+
+@media (max-width: 768px) {
+    .canvas-container {
+        padding: 20px 10px;
+        min-height: 400px;
+    }
 }
 
 .click-instruction {
@@ -224,12 +232,21 @@ header p {
 
 #pdfCanvas {
     max-width: 100%;
+    width: 100%;
     height: auto;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     border-radius: 4px;
     cursor: crosshair;
     background: white;
     direction: ltr;
+    touch-action: none;
+}
+
+@media (max-width: 768px) {
+    #pdfCanvas {
+        width: 100%;
+        max-width: 100%;
+    }
 }
 
 #signatureMarkers {
@@ -252,6 +269,17 @@ header p {
     display: flex;
     align-items: center;
     justify-content: center;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+@media (max-width: 768px) {
+    .signature-marker {
+        border: 3px dashed #667eea;
+        min-width: 120px;
+        min-height: 40px;
+    }
 }
 
 .signature-marker img {
